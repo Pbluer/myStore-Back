@@ -1,11 +1,37 @@
-
+var User = require('../model/User')
 class UserController{
     
     async create( req,res ){
-        res.send('create')
+        let { nome,email,password } = req.body;
+        
+        if( nome == undefined ){
+            res.json({ err: 'O nome não foi inserido.' })
+            res.sendStatus(400)
+            return
+        }
+        
+        if( email == undefined ){
+            res.sendStatus(400)
+            res.json({ err: 'O email não foi inserido.' })
+            return
+        }
+        
+        if( password == undefined ){
+            res.sendStatus(400)
+            res.json({ err: 'A senha não foi inserida.' })
+            return
+        }
+        
+        let response =  await User.new( req.body );
+        
+        if( response.status == 200 ){
+            res.sendStatus(res.status)
+        }else{
+            res.json( response )
+        }
     }
     
-    async remove( req,res ){
+    async delete( req,res ){
         res.send('remove')
     }
 
