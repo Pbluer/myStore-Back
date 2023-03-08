@@ -1,9 +1,9 @@
 var Item = require('../model/Item');
 class ItemController {
   async create(req, res) {
-    let { nome, preco, descricao, tamanho, tecido, modelo } = req.body;
+    let { name, price, size, type } = req.body;
 
-    if( !nome ){
+    if( !name ){
         res.json({ 
             err: 'É necessário inserir um nome.',
             status: 403
@@ -11,25 +11,25 @@ class ItemController {
         return
     }
 
-    if( !preco ){
+    if( !price ){
         res.json({ 
             err: 'É necessário inserir um preço.',
             status: 403
         });
         return
     }
-    
-    if( !descricao ){
+
+    if( !size ){
         res.json({ 
-            err: 'É necessário inserir uma descrição.',
+            err: 'É necessário inserir um tamanho.',
             status: 403
         });
         return
     }
 
-    if( !tamanho ){
+    if( !type ){
         res.json({ 
-            err: 'É necessário inserir um tamanho.',
+            err: 'É necessário inserir um modelo.',
             status: 403
         });
         return
@@ -48,7 +48,17 @@ class ItemController {
   }
 
   async findAll(req, res) {
-    res.send("findAll");
+    let result = await Item.getAll();
+    
+    if( result ){
+      res.status(200)
+      res.json(result);
+    }else{
+      res.status(result.status)
+      res.json(result.err)
+    }
+
+    return;
   }
 
   async editItem(req, res) {

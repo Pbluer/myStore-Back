@@ -1,29 +1,36 @@
-let DB = require('../DataBase/data.js')
+const DataBase = require('../DataBase/index.js')
 class Item{
 
     async new( value ){
-        let {  nome, preco, descricao, tamanho, tecido, modelo } = value;
-        
-        let sizeDados = await DB.getSize();
+        let {  name, price, size, type } = value;
+                
+        let alreadyExist = await this.findByName( name );
 
-        let alreadyExist = await this.findByName( nome );
-        
-        if( !alreadyExist ){
+        if( alreadyExist ){
             
-            let res = await DB.edit( {
-                id: 1,
-                nome:nome,
-                preco:preco,
-                descricao: descricao,
-                tamanho: tamanho         
-            } );
+            let data = {
+                name: name,
+                price: price,
+                size: size,
+                type: type,
+
+            };
+            
+            try{
+               await DataBase('item').insert(data);
+
+               return true;
+            }catch( err ){
+                return false;
+            }
 
             if( res.status == 200 ){
                 return res
             }
             
+        }else{
+            
         }
-
 
         return {
             status: 200
@@ -32,15 +39,36 @@ class Item{
     }
 
     async findByName( value ){
-        let dados = await DB.getAll();
-
-        if( dados.length > 1){
-            console.log('encontrar nome')
+        let dados = await DataBase('item').select().where('name',value);
+    
+        if( dados.length > 0){
+            return true;
         }else{
-            return null
+            return false
         }
 
     }
+
+    async getAll(){
+
+        try{
+
+            let dados = await DataBase.select('*').table('item');
+
+            if(!dados){
+                return null
+            }else{
+                return dados;
+            }
+            
+        }catch( err ){
+            return {
+                err: err,
+                status: 400
+            };
+        }
+    }
+
     async remove(req,res){
     }
 
