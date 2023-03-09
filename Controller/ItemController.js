@@ -1,7 +1,7 @@
 var Item = require('../model/Item');
 class ItemController {
   async create(req, res) {
-    let { name, price, size, type } = req.body;
+    let { name, price, size,type } = req.body;
 
     if( !name ){
         res.json({ 
@@ -27,16 +27,9 @@ class ItemController {
         return
     }
 
-    if( !type ){
-        res.json({ 
-            err: 'É necessário inserir um modelo.',
-            status: 403
-        });
-        return
-    }
-
     let result = await Item.new( req.body )
-    res.send("create");
+    
+    res.json(result)
   }
 
   async delete(req, res) {
