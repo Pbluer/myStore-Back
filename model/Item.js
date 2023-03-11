@@ -41,26 +41,54 @@ class Item{
         
     }
 
-    async findByName( value ){
-        let dados = await DataBase('item').select().where('name',value);
-    
-        if( dados.length > 0){
-            return false;
-        }else{
-            return true
+    async findByName( name ){
+
+        try{
+            let result = await DataBase('item').select().where( { name:name } );
+            
+            if( result.length > 0){
+                return false;
+            }else{
+                return true
+            }            
+        }catch(err){
+            return {
+                status:400,
+                mensage:err.sqlMessage
+            }
         }
+    
+    }
+
+    async findById( id ){
+
+        try{
+            let result = await DataBase('item').select().where( { id:id } );
+
+            if( result.length > 0){
+                return result;
+            }else{
+                return false;
+            }            
+        }catch(err){
+            return {
+                status:400,
+                mensage:err.sqlMessage
+            }
+        }
+    
     }
 
     async getAll(){
 
         try{
 
-            let dados = await DataBase.select('*').table('item');
+            let result = await DataBase.select().table('item');
 
-            if(!dados){
+            if(!result){
                 return null
             }else{
-                return dados;
+                return result;
             }
             
         }catch( err ){
@@ -71,10 +99,81 @@ class Item{
         }
     }
 
-    async remove(req,res){
+    async remove( id ){
+       
+        try{
+            let result = await DataBase('item').where({ id: id }).delete();
+           
+            if( result > 0 ){
+                
+                return {
+                    status: 200,
+                    mensage: 'Item excluido com sucesso.'
+                }
+
+            }else{
+                return {
+                    status: 400,
+                    mensage: 'item não encontrado.'
+                }
+            }
+
+        }catch( err){
+            return {
+                status:400,
+                mensage:err.sqlMessage
+            }
+        }
+
     }
 
-    async update(req,res){}
+    async update( dados ){
+      
+        let { id, name, price, size, type } = dados;
+
+        try{
+            let findItem = await this.findById(id);
+            
+            if( !findItem ){
+                return {
+                    status: 400,
+                    mensage: 'Item não encontrado.'
+                }
+            }
+
+        }catch(err){
+            return {
+                status: 400,
+                mensage: err.sqlMessage
+            }
+        }
+
+        try{
+
+            let date = await utils.getDateTimeSql();
+
+            let result = await DataBase('item').where({ id:id }).update({
+                name: name,
+                price: price,
+                size: size,
+                type: type,
+                update_at: date
+            });
+
+            if( result > 0 ){
+                return {
+                    status:200,
+                    mensage: 'Item alterado.'
+                }
+            }
+        }catch( err ){
+            return {
+                status:400,
+                mensage: err.sqlMessage
+            }
+        } 
+
+    }
 
 }
 
