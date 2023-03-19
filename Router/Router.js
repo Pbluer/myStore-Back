@@ -13,6 +13,7 @@ router.delete('/item/:id', ItemController.delete)
 router.get('/user', UserController.findAll)
 router.get('/user/:id', UserController.findById)
 router.post('/user', UserController.create)
+router.post('/user/login', UserController.login)
 router.put('/user/:id', UserController.findById)
 router.delete('/user/:id', UserController.delete)
 module.exports = router;

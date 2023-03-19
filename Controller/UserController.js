@@ -2,33 +2,65 @@ var User = require('../model/User')
 class UserController{
     
     async create( req,res ){
-        let { nome,email,password } = req.body;
+        let { login,password,email } = req.body;
         
-        if( nome == undefined ){
-            res.json({ err: 'O nome não foi inserido.' })
-            res.sendStatus(400)
-            return
+        if( login == undefined || login == "" ){
+            res.json({ 
+                status: 400,
+                err: 'Login não informado.'
+            })
+            return;
         }
         
-        if( email == undefined ){
-            res.sendStatus(400)
-            res.json({ err: 'O email não foi inserido.' })
-            return
+        if( email == undefined || email == "" ){
+            res.json({ 
+                status: 400,
+                err: 'Email não informado.'
+            })            
+            return;
         }
         
-        if( password == undefined ){
-            res.sendStatus(400)
-            res.json({ err: 'A senha não foi inserida.' })
-            return
+        if( password == undefined || password  == ""){
+            res.json({ 
+                status: 400,
+                err: 'Senha não informada'
+            })
+            return;
         }
         
-        let response =  await User.new( req.body );
+        let response =  await User.new( req.body );        
+        res.json(response)
+    }
+    
+    async login( req,res ){
+        let { login,password,email,name,birth } = req.body;
         
-        if( response.status == 200 ){
-            res.sendStatus(res.status)
-        }else{
-            res.json( response )
+        if( login == undefined || login == "" ){
+            res.json({ 
+                status: 400,
+                err: 'Login não informado.'
+            })
+            return;
         }
+        
+        if( email == undefined || email == "" ){
+            res.json({ 
+                status: 400,
+                err: 'Email não informado.'
+            })            
+            return;
+        }
+        
+        if( password == undefined || password  == ""){
+            res.json({ 
+                status: 400,
+                err: 'Senha não informada'
+            })
+            return;
+        }
+        
+        let response =  await User.login( req.body );        
+        res.json(response)
     }
     
     async delete( req,res ){

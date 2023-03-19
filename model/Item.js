@@ -148,7 +148,7 @@ class Item{
             }
         }
 
-        try{
+        try{    
 
             let date = await utils.getDateTimeSql();
 

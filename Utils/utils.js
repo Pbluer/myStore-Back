@@ -1,4 +1,4 @@
-
+const crypto = require('crypto');
 class Utils{
 
     async getDateTimeSql() {
@@ -30,6 +30,13 @@ class Utils{
     }
 
     async formatDateSql( value ){}
+    
+    async md5( value, hex = 'md5' ) {
+        return crypto.createHash(hex)
+            .update(value)
+            .digest('hex');
+    }
+
 }
 
 module.exports = new Utils();
