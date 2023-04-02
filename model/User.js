@@ -1,10 +1,12 @@
 const Database = require('../DataBase/index.js')
 const Utils = require('../Utils/utils.js')
 
+
 class User{
 
     async new( data ){
         let { login,password,email,name,birth } = data;
+        let token = this.Utils.md5( Math.random() + '-' + ( new Date().getTime() )  + '-' + login )
 
         let loginExist = await this.getByLogin(login)
         let emailExist = await this.getByEmail(email)
@@ -16,15 +18,19 @@ class User{
                 let passwrodCrypt = await Utils.md5(password)
 
                 try{
-
-                    let result = await Database('user').insert({
+                    
+                    
+                    let token = this.Utils.md5( Math.random() + '-' + ( new Date().getTime() )  + '-' + login )
+                    console.log(token)
+                    
+                    let result = await Database('usuario').insert({
                         login: login,
                         password: passwrodCrypt,
                         email: email,
                         name: name,
                         birth: birth,
                     })
-
+                    
                     return{
                         status: 200,
                         mensage: 'Usuário cadastrado.'
@@ -55,24 +61,25 @@ class User{
 
     async login( data ){
 
-        let { login,password,email,name,birth } = data;
+        let { login,password } = data;
 
         let loginExist = await this.getByLogin(login)
 
         if( loginExist ){
-            
+
             let passwrodCrypt = await Utils.md5(password);
             
             try{
-                let result = await Database('user').select('').where({
+                let result = await Database('usuario').select('').where({
                     login: login,
                     password: password
                 }); 
 
-                if( result.lenght > 0 ){
+                if( result.length > 0 ){ 
                     return {
                         status: 200,
-                        mensage: 'Login efetuado.'
+                        mensage: 'Login efetuado.',
+                        token: ''
                     }
                 }else{
                     return {
@@ -99,7 +106,7 @@ class User{
     async getByLogin( login ) {
 
         try{
-            let result = await Database('user').select().where({ login: login })
+            let result = await Database('usuario').select().where({ login: login })
 
             if( result.length > 0 ){
                 return result
@@ -118,7 +125,7 @@ class User{
     async getByEmail( email ) {
 
         try{
-            let result = await Database('user').select().where({ email: email })
+            let result = await Database('usuario').select().where({ email: email })
 
             if( result.length ){
                 return reuslt
@@ -137,7 +144,7 @@ class User{
     async getByName( name ) {
 
         try{
-            let result = Database('user').select().where({ name: name })            
+            let result = Database('usuario').select().where({ name: name })            
             
             if( result.length > 0 ){
                 return result

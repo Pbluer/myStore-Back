@@ -1,9 +1,13 @@
-var User = require('../model/User')
+var User = require('../model/User');
+const utils = require('../Utils/utils');
 class UserController{
     
     async create( req,res ){
-        let { login,password,email } = req.body;
+        let { path,mimetype } = req.file;
+        let { login,password,email,foto } = req.body;
         
+        var image = await utils.imageBase64(path,mimetype);
+
         if( login == undefined || login == "" ){
             res.json({ 
                 status: 400,
@@ -38,23 +42,15 @@ class UserController{
         if( login == undefined || login == "" ){
             res.json({ 
                 status: 400,
-                err: 'Login não informado.'
+                mensage: 'Login não informado.'
             })
-            return;
-        }
-        
-        if( email == undefined || email == "" ){
-            res.json({ 
-                status: 400,
-                err: 'Email não informado.'
-            })            
             return;
         }
         
         if( password == undefined || password  == ""){
             res.json({ 
                 status: 400,
-                err: 'Senha não informada'
+                mensage: 'Senha não informado.'
             })
             return;
         }
@@ -78,7 +74,7 @@ class UserController{
     async editItem( req,res ){
         res.send('editItem')
     }
-    
+
 }
 
 module.exports = new UserController()
