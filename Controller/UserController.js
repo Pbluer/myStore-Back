@@ -3,31 +3,33 @@ const utils = require('../Utils/utils');
 class UserController{
     
     async create( req,res ){
-        let { path,mimetype } = req.file;
-        let { login,password,email,foto } = req.body;
-        
-        var image = await utils.imageBase64(path,mimetype);
+        if( req.file ){
+            let { path,mimetype } = req.file;
+            req.body.foto = await utils.imageBase64(path,mimetype);
+        }
 
-        if( login == undefined || login == "" ){
+        let { login,password,email } = req.body;
+
+        if( email == undefined || email == "null" ){
             res.json({ 
                 status: 400,
-                err: 'Login não informado.'
+                mensage: 'Email não informado.'
             })
             return;
         }
-        
-        if( email == undefined || email == "" ){
+
+        if( login == undefined || login == "null" ){
             res.json({ 
                 status: 400,
-                err: 'Email não informado.'
-            })            
+                mensage: 'Login não informado.'
+            })
             return;
         }
-        
-        if( password == undefined || password  == ""){
+
+        if( password == undefined || password  == "null"){
             res.json({ 
                 status: 400,
-                err: 'Senha não informada'
+                mensage: 'Senha não informada'
             })
             return;
         }

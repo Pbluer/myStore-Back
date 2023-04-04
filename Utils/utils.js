@@ -47,10 +47,18 @@ class Utils{
     
     async imageBase64( path,type ){
         let bitmapString = (fs.readFileSync(path)).toString('base64');
-        fs.unlink(path); // remove o arquivo
+        this.deleteUpload(path);
         return `data:${type};base64,` + bitmapString;
     }
 
+    async deleteUpload( path ){
+
+        fs.unlink(path, err => {
+            if( err ) throw err;
+        })
+        
+        return;
+    }
 }
 
 module.exports = new Utils();

@@ -5,9 +5,8 @@ const Utils = require('../Utils/utils.js')
 class User{
 
     async new( data ){
-        let { login,password,email,name,birth } = data;
-        let token = this.Utils.md5( Math.random() + '-' + ( new Date().getTime() )  + '-' + login )
-
+        let { login,password,email,name,foto } = data;
+     
         let loginExist = await this.getByLogin(login)
         let emailExist = await this.getByEmail(email)
 
@@ -17,20 +16,24 @@ class User{
                 
                 let passwrodCrypt = await Utils.md5(password)
 
-                try{
-                    
-                    
-                    let token = this.Utils.md5( Math.random() + '-' + ( new Date().getTime() )  + '-' + login )
-                    console.log(token)
-                    
+                let token = await Utils.md5( Math.random() + '-' + ( new Date().getTime() )  + '-' + login );
+                try{                  
+                                        
                     let result = await Database('usuario').insert({
                         login: login,
                         password: passwrodCrypt,
                         email: email,
                         name: name,
-                        birth: birth,
+                        foto: foto
                     })
-                    
+
+                    let id = result[0];
+                            
+                    await Database('user_token').insert({
+                        id:id,
+                        token:token
+                    })
+                   
                     return{
                         status: 200,
                         mensage: 'Usuário cadastrado.'
@@ -46,14 +49,14 @@ class User{
 
             }else{
                 return {
-                    status:200,
+                    status:400,
                     mensage: 'Login já cadastrado.'
                 }
             }
 
         }else{
             return {
-                    status: 200,
+                    status: 400,
                     mensage: 'Email já cadastrado.'
                 };
         }
