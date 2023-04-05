@@ -75,14 +75,16 @@ class User{
             try{
                 let result = await Database('usuario').select('').where({
                     login: login,
-                    password: password
+                    password: passwrodCrypt
                 }); 
+
+                let token = await Utils.tokenLogin(login);
 
                 if( result.length > 0 ){ 
                     return {
                         status: 200,
                         mensage: 'Login efetuado.',
-                        token: ''
+                        token: token
                     }
                 }else{
                     return {

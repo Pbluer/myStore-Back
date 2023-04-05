@@ -39,9 +39,9 @@ class UserController{
     }
     
     async login( req,res ){
-        let { login,password,email,name,birth } = req.body;
+        let { login,password } = req.body;
         
-        if( login == undefined || login == "" ){
+        if( login == undefined || login == "null" ){
             res.json({ 
                 status: 400,
                 mensage: 'Login não informado.'
@@ -49,11 +49,12 @@ class UserController{
             return;
         }
         
-        if( password == undefined || password  == ""){
+        if( password == undefined || password  == "null" ){
             res.json({ 
                 status: 400,
                 mensage: 'Senha não informado.'
             })
+            
             return;
         }
         
