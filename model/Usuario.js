@@ -1,14 +1,12 @@
 const Database = require('../DataBase/index.js')
 const Utils = require('../Utils/utils.js')
 
-
 class User{
 
-    async new( data ){
-        let { login,password,email,name,foto } = data;
-     
-        let loginExist = await this.getByLogin(login)
-        let emailExist = await this.getByEmail(email)
+    async cadastro( { email,senha,name,foto } ){
+
+        let loginExist = await this.getByLogin(login);
+        let emailExist = await this.getByEmail(email);
 
         if( !emailExist ){
             

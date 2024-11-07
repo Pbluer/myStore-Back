@@ -1,15 +1,11 @@
-var User = require('../model/User');
+var Usuario = require('../model/Usuario');
 const utils = require('../Utils/utils');
 class UserController{
     
-    async create( req,res ){
-        if( req.file ){
-            let { path,mimetype } = req.file;
-            req.body.foto = await utils.imageBase64(path,mimetype);
-        }
-
-        let { login,password,email } = req.body;
-
+    async criarUsuario( req,res ){  
+        console.log(req)
+        return
+        let { email,senha,confirmaSenha,nome,sobrenome } = req.body;
         if( email == undefined || email == "null" ){
             res.json({ 
                 status: 400,
@@ -18,23 +14,23 @@ class UserController{
             return;
         }
 
-        if( login == undefined || login == "null" ){
+        if( (senha == undefined || senha == "null" ) || confirmaSenha == undefined || confirmaSenha  == "null"){
             res.json({ 
                 status: 400,
-                mensage: 'Login não informado.'
+                mensage: 'Senha não informado.'
             })
             return;
         }
 
-        if( password == undefined || password  == "null"){
+        if( senha != confirmaSenha ){
             res.json({ 
                 status: 400,
-                mensage: 'Senha não informada'
+                mensage: 'A senhas não são iguais.'
             })
             return;
         }
         
-        let response =  await User.new( req.body );        
+        let response =  await Usuario.cadastro( req.body );        
         res.json(response)
     }
     

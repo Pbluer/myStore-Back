@@ -1,6 +1,6 @@
 const crypto = require('crypto');
-const jwt = require('jsonwebtoken')
-const fs = require('fs')
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
 class Utils{
 
     async getDateTimeSql() {
