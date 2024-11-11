@@ -3,10 +3,11 @@ const utils = require('../Utils/utils');
 class UserController{
     
     async criarUsuario( req,res ){  
-        console.log(req)
-        return
+        console.log(req.files)
+        console.log(req.body)
         let { email,senha,confirmaSenha,nome,sobrenome } = req.body;
         if( email == undefined || email == "null" ){
+            res.status(400)
             res.json({ 
                 status: 400,
                 mensage: 'Email não informado.'
