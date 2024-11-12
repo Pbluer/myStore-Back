@@ -3,52 +3,31 @@ const Utils = require('../Utils/utils.js')
 
 class User{
 
-    async cadastro( { email,senha,name,foto } ){
+    async cadastro( { email,senha,nome,sobrenome } ){
 
-        let loginExist = await this.getByLogin(login);
-        let emailExist = await this.getByEmail(email);
+        if( !await this.getByEmail(email)){           
+           
+            let senhaCrypt = await Utils.md5(senha)
 
-        if( !emailExist ){
-            
-            if( !loginExist ){
-                
-                let passwrodCrypt = await Utils.md5(password)
+            try{                  
+                                    
+                await Database('usuario').insert({
+                    email: email,
+                    senha: senhaCrypt,
+                    nome: nome,
+                    sobrenome: sobrenome
+                })
 
-                let token = await Utils.md5( Math.random() + '-' + ( new Date().getTime() )  + '-' + login );
-                try{                  
-                                        
-                    let result = await Database('usuario').insert({
-                        login: login,
-                        password: passwrodCrypt,
-                        email: email,
-                        name: name,
-                        foto: foto
-                    })
-
-                    let id = result[0];
-                            
-                    await Database('user_token').insert({
-                        id:id,
-                        token:token
-                    })
-                   
-                    return{
-                        status: 200,
-                        mensage: 'Usuário cadastrado.'
-                    }
-
-                }catch( err ){
-
-                    return {
-                        status: 400,
-                        mensage: err.sqlMessage
-                    }
+                return {
+                    status: 200,
+                    mensage: 'Operação realizada.'
                 }
 
-            }else{
+            }catch( err ){
+
                 return {
-                    status:400,
-                    mensage: 'Login já cadastrado.'
+                    status: 400,
+                    mensage: err.sqlMessage
                 }
             }
 
@@ -60,29 +39,27 @@ class User{
         }
     }
 
-    async login( data ){
+    async acessar( { email,senha } ){
+        if( await this.getByEmail(email) ){
 
-        let { login,password } = data;
-
-        let loginExist = await this.getByLogin(login)
-
-        if( loginExist ){
-
-            let passwrodCrypt = await Utils.md5(password);
-            
+            let senhaCrypt = await Utils.md5(senha);
             try{
                 let result = await Database('usuario').select('').where({
-                    login: login,
-                    password: passwrodCrypt
+                    email: email,
+                    senha: senhaCrypt
                 }); 
-
-                let token = await Utils.tokenLogin(login);
-
-                if( result.length > 0 ){ 
+                
+                if( result.length > 0 ){
+                    let token = await Utils.tokenUsuario(email);
+                 
                     return {
                         status: 200,
-                        mensage: 'Login efetuado.',
-                        token: token
+                        mensage: 'Operação realizada.',
+                        data:{
+                            token: token,
+                            codigo: result[0].codigo,
+                            nome: result[0].nome
+                        }
                     }
                 }else{
                     return {
@@ -106,32 +83,13 @@ class User{
     async remove(req,res){
     }
 
-    async getByLogin( login ) {
-
-        try{
-            let result = await Database('usuario').select().where({ login: login })
-
-            if( result.length > 0 ){
-                return result
-            }else{
-                false;
-            }
-
-        }catch( err ){
-            return {
-                status:400,
-                mensage:err.sqlMessage
-            }
-        }
-    }
-
     async getByEmail( email ) {
 
         try{
             let result = await Database('usuario').select().where({ email: email })
-
+            
             if( result.length ){
-                return reuslt
+                return result
             }else{
                 false;
             }

@@ -2,12 +2,10 @@ var Usuario = require('../model/Usuario');
 const utils = require('../Utils/utils');
 class UserController{
     
-    async criarUsuario( req,res ){  
-        console.log(req.files)
-        console.log(req.body)
-        let { email,senha,confirmaSenha,nome,sobrenome } = req.body;
+    async criarUsuario( req,res ){ 
+        let { email,senha,confirmarSenha } = req.body;
+
         if( email == undefined || email == "null" ){
-            res.status(400)
             res.json({ 
                 status: 400,
                 mensage: 'Email não informado.'
@@ -15,7 +13,7 @@ class UserController{
             return;
         }
 
-        if( (senha == undefined || senha == "null" ) || confirmaSenha == undefined || confirmaSenha  == "null"){
+        if( (senha == undefined || senha == "null" ) || confirmarSenha == undefined || confirmarSenha  == "null"){
             res.json({ 
                 status: 400,
                 mensage: 'Senha não informado.'
@@ -23,10 +21,10 @@ class UserController{
             return;
         }
 
-        if( senha != confirmaSenha ){
+        if( senha != confirmarSenha ){
             res.json({ 
                 status: 400,
-                mensage: 'A senhas não são iguais.'
+                mensage: 'As senhas precisam ser iguais.'
             })
             return;
         }
@@ -35,27 +33,25 @@ class UserController{
         res.json(response)
     }
     
-    async login( req,res ){
-        let { login,password } = req.body;
-        
-        if( login == undefined || login == "null" ){
+    async acessar( req,res ){
+        let { email,senha } = req.body;
+        if( email == undefined || email == "null" ){
             res.json({ 
                 status: 400,
-                mensage: 'Login não informado.'
+                mensage: 'Email não informado.'
             })
             return;
         }
         
-        if( password == undefined || password  == "null" ){
+        if( senha == undefined || senha  == "null" ){
             res.json({ 
                 status: 400,
-                mensage: 'Senha não informado.'
-            })
-            
+                mensage: 'Senha não informada.'
+            })            
             return;
         }
         
-        let response =  await User.login( req.body );        
+        let response =  await Usuario.acessar( req.body );        
         res.json(response)
     }
     

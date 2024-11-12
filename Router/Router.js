@@ -14,7 +14,7 @@ router.delete('/item/:id', ItemController.delete)
 router.get('/usuario', UsuarioController.findAll)
 router.get('/usuario/:id', UsuarioController.findById)
 router.post('/usuario',UsuarioController.criarUsuario )
-router.post('/usuario/login', UsuarioController.login)
+router.post('/usuario/acessar', UsuarioController.acessar)
 router.put('/usuario/:id', UsuarioController.findById)
 router.delete('/usuario/:id', UsuarioController.delete)
 

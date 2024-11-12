@@ -39,11 +39,11 @@ class Utils{
             .digest('hex');
     }
 
-    async tokenLogin( data ){
+    async tokenUsuario( data ){
         // gera um usando o login token que irá expirar em uma hora
         // var decoded = jwt.verify(webTokenEncript, 'imagineUmaChaveSecreta');
-        
-        return jwt.sign({ data: data }, 'imagineUmaChaveSecreta', { expiresIn: '1h' });
+   
+        return jwt.sign({ usuario: data, }, 'imagineUmaChaveSecreta', { expiresIn: '1h' });
     }
     
     async imageBase64( path,type ){
