@@ -4,6 +4,7 @@ const multer = require('multer');
 
 var ItemController = require('../Controller/ItemController')
 var UsuarioController = require('../Controller/UsuarioController')
+var CartaoController = require('../Controller/CartaoController')
 
 router.get('/item', ItemController.findAll)
 router.get('/item/:id', ItemController.findById)
@@ -17,5 +18,7 @@ router.post('/usuario',UsuarioController.criarUsuario )
 router.post('/usuario/acessar', UsuarioController.acessar)
 router.put('/usuario/:id', UsuarioController.findById)
 router.delete('/usuario/:id', UsuarioController.delete)
+
+router.post('/cartao', CartaoController.gravar)
 
 module.exports = router;    

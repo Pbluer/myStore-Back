@@ -30,8 +30,6 @@ class Utils{
 
         return ` ${year}-${month}-${day} 00:00:00`;
     }
-
-    async formatDateSql( value ){}
     
     async md5( value ) {
         return crypto.createHash('md5')
@@ -59,6 +57,18 @@ class Utils{
         })
         
         return;
+    }
+
+    formataString(value) {
+        return new String(value).toString()
+    }
+
+    formataNumero(value) {
+        return parseInt(value)
+    }
+
+    formataFloat(value) {
+        return parseFloat(value)
     }
 }
 
