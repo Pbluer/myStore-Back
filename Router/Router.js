@@ -20,5 +20,7 @@ router.put('/usuario/:id', UsuarioController.findById)
 router.delete('/usuario/:id', UsuarioController.delete)
 
 router.post('/cartao', CartaoController.gravar)
+router.get('/cartao/', CartaoController.recuperar)
+router.get('/cartao/listagem', CartaoController.listagem)
 
 module.exports = router;    

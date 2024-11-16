@@ -13,13 +13,12 @@ class CartaoController {
             })
             return;
         }
-        console.log({
-            codigo: Utils.formataNumero(codigo),
-            descricao: Utils.formataString(descricao),
-            ativo: Utils.formataNumero(ativo)
-        })
+      
         if (codigo == 0) {
-            var response = await Cartao.cadastro({ descricao, ativo });
+            var response = await Cartao.cadastro({
+                descricao: Utils.formataString(descricao),
+                ativo: Utils.formataNumero(ativo)
+            });
         } else {
             var response = await Cartao.atualizar({
                 codigo: Utils.formataNumero(codigo),
@@ -50,6 +49,10 @@ class CartaoController {
         res.send('remove')
     }
 
+    async listagem(req, res) {
+        let response = await Cartao.buscarTodos(req.body);
+        res.json(response)
+    }
 }
 
 module.exports = new CartaoController()

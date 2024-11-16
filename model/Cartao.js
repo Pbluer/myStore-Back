@@ -9,7 +9,8 @@ class User{
 
             await Database('cartao').insert({
                 descricao: descricao,
-                ativo: ativo
+                ativo: ativo,
+                dataAlteracao: new Date()
             })
 
             return {
@@ -78,45 +79,30 @@ class User{
 
     }
 
-    async remove(req,res){
-    }
+    async buscarTodos() {
+        try {
+            let result = await Database('cartao').select();
 
-    async getByEmail( email ) {
-
-        try{
-            let result = await Database('usuario').select().where({ email: email })
-            
-            if( result.length ){
-                return result
-            }else{
-                false;
+            if (result.length > 0) {
+                return {
+                    status: 200,
+                    mensage: 'Operação realizada.',
+                    data: result
+                }
+            } else {
+                console.log(result)
+                return {
+                    status: 400,
+                    mensage: 'Senha incorreta.'
+                }
             }
 
-        }catch( err ){
+        } catch (err) {
             return {
-                status:400,
-                mensage:err.sqlMessage
+                status: 400,
+                mensage: err.sqlMessage
             }
         }
-    }
-
-    async getByName( name ) {
-
-        try{
-            let result = Database('usuario').select().where({ name: name })            
-            
-            if( result.length > 0 ){
-                return result
-            }else{
-                false;
-            }
-
-        }catch( err ){
-            console.log(err)
-        }
-    }
-
-    async update(req,res){
 
     }
 
