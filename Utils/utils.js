@@ -44,6 +44,10 @@ class Utils{
         return jwt.sign({ usuario: data, }, 'imagineUmaChaveSecreta', { expiresIn: '1h' });
     }
     
+    async checkToken( token ){
+        let decoded = jwt.verify(token, 'imagineUmaChaveSecreta');
+    }
+    
     async imageBase64( path,type ){
         let bitmapString = (fs.readFileSync(path)).toString('base64');
         this.deleteUpload(path);
@@ -69,6 +73,10 @@ class Utils{
 
     formataFloat(value) {
         return parseFloat(value)
+    }
+
+    formatarMoeda(value){
+        return value.replace('.','').replace(',','.')
     }
 }
 

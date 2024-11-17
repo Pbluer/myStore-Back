@@ -50,15 +50,20 @@ class User{
                 }); 
                 
                 if( result.length > 0 ){
-                    let token = await Utils.tokenUsuario(email);
+                    let { codigo,nome,email } = result[0];
+
+                    let token = await Utils.tokenUsuario({
+                        codigo: codigo,
+                        email: email
+                    });
                  
                     return {
                         status: 200,
                         mensage: 'Operação realizada.',
                         data:{
                             token: token,
-                            codigo: result[0].codigo,
-                            nome: result[0].nome
+                            codigo: codigo,
+                            nome: nome
                         }
                     }
                 }else{

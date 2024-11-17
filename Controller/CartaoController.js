@@ -1,10 +1,11 @@
 var Cartao = require('../model/Cartao');
+const utils = require('../Utils/utils');
 const Utils = require('../Utils/utils');
 
 class CartaoController {
 
     async gravar(req, res) {
-        let { codigo, descricao, ativo } = req.body;
+        let { codigo, descricao,limite, ativo } = req.body;
 
         if (descricao == undefined || descricao == "null") {
             res.json({
@@ -13,16 +14,26 @@ class CartaoController {
             })
             return;
         }
+
+        if (limite == undefined || limite == "null") {
+            res.json({
+                status: 400,
+                mensage: 'Insirá o limite do cartão.'
+            })
+            return;
+        }   
       
         if (codigo == 0) {
             var response = await Cartao.cadastro({
                 descricao: Utils.formataString(descricao),
+                limite: utils.formatarMoeda(limite),
                 ativo: Utils.formataNumero(ativo)
             });
         } else {
             var response = await Cartao.atualizar({
                 codigo: Utils.formataNumero(codigo),
                 descricao: Utils.formataString(descricao),
+                limite: utils.formatarMoeda(limite),
                 ativo: Utils.formataNumero(ativo)
             });
         }

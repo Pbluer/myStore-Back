@@ -9,8 +9,8 @@ class User{
 
             await Database('cartao').insert({
                 descricao: descricao,
-                ativo: ativo,
-                dataAlteracao: new Date()
+                limite: limite,
+                ativo: ativo                
             })
 
             return {
@@ -27,13 +27,15 @@ class User{
         }
     }
 
-    async atualizar({ codigo,descricao, ativo }) {
+    async atualizar({ codigo,descricao,limite, ativo }) {
 
         try {
 
             await Database('cartao').update({
                 descricao: descricao,
-                ativo: ativo
+                limite: limite,
+                ativo: ativo,
+                dataAlteracao: new Date()
             }).where({ codigo: codigo })
 
             return {
@@ -81,7 +83,7 @@ class User{
 
     async buscarTodos() {
         try {
-            let result = await Database('cartao').select();
+            let result = await Database('cartao').select('codigo','descricao','ativo','limite');
 
             if (result.length > 0) {
                 return {
