@@ -123,9 +123,6 @@ class User{
         }
     }
 
-    async update(req,res){
-
-    }
 
 }
 

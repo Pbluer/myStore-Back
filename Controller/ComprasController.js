@@ -1,10 +1,11 @@
-var Cartao = require('../model/Cartao');
+var Compras = require('../model/Compras');
+const utils = require('../Utils/utils');
 const Utils = require('../Utils/utils');
 
-class CartaoController {
+class ComprasController {
 
-    async gravar(req, res,next) {
-        let { codigo, descricao,limite, ativo } = req.body;
+    async gravar(req, res) {
+        let { codigo, descricao,quantidade,valor,parcela } = req.body;
 
         if (descricao == undefined || descricao == "null") {
             res.json({
@@ -14,7 +15,7 @@ class CartaoController {
             return;
         }
 
-        if (limite == undefined || limite == "null") {
+        if (quantidade == undefined || quantidade == "null") {
             res.json({
                 status: 400,
                 mensage: 'Insirá o limite do cartão.'
@@ -22,18 +23,25 @@ class CartaoController {
             return;
         }   
 
+        if (valor == undefined || valor == "null") {
+            res.json({
+                status: 400,
+                mensage: 'Insirá o limite do cartão.'
+            })
+            return;
+        }   
+      
         if (codigo == 0) {
-            var response = await Cartao.cadastro({
+            var response = await Compras.cadastro({
                 descricao: Utils.formataString(descricao),
-                limite: Utils.formatarMoeda(limite),
-                usuario: res.locals.codigoUsuario,
+                limite: utils.formatarMoeda(limite),
                 ativo: Utils.formataNumero(ativo)
             });
         } else {
-            var response = await Cartao.atualizar({
+            var response = await Compras.atualizar({
                 codigo: Utils.formataNumero(codigo),
                 descricao: Utils.formataString(descricao),
-                limite: Utils.formatarMoeda(limite),
+                limite: utils.formatarMoeda(limite),
                 ativo: Utils.formataNumero(ativo)
             });
         }
@@ -52,7 +60,7 @@ class CartaoController {
             return;
         }
 
-        let response = await Cartao.acessar(req.body);
+        let response = await Compras.acessar(req.body);
         res.json(response)
     }
 
@@ -60,10 +68,10 @@ class CartaoController {
         res.send('remove')
     }
 
-    async listagem(req, res ){
-        let response = await Cartao.buscarTodos(req.body);
+    async listagem(req, res) {
+        let response = await Compras.buscarTodos(req.body);
         res.json(response)
     }
-}   
+}
 
-module.exports = new CartaoController()
+module.exports = new ComprasController()

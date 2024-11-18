@@ -1,16 +1,15 @@
-const Database = require('../DataBase/index.js')
+const DataBase = require('../DataBase/index.js')
 const Utils = require('../Utils/utils.js')
 
-class User{
+class Compras{
 
-    async cadastro({ descricao,limite,usuario, ativo }) {
+    async cadastro({ descricao, ativo }) {
 
         try {
 
             await Database('cartao').insert({
                 descricao: descricao,
                 limite: limite,
-                usuario: usuario,
                 ativo: ativo                
             })
 
@@ -84,12 +83,22 @@ class User{
 
     async buscarTodos() {
         try {
-            let result = await Database('cartao').select('codigo','descricao','ativo','limite','usuario');
-            return {
-                status: 200,
-                mensage: 'Operação realizada.',
-                data: result
+            let result = await Database('cartao').select('codigo','descricao','ativo','limite');
+
+            if (result.length > 0) {
+                return {
+                    status: 200,
+                    mensage: 'Operação realizada.',
+                    data: result
+                }
+            } else {
+                console.log(result)
+                return {
+                    status: 400,
+                    mensage: 'Senha incorreta.'
+                }
             }
+
         } catch (err) {
             return {
                 status: 400,
@@ -101,4 +110,4 @@ class User{
 
 }
 
-module.exports = new User()
+module.exports = new Compras()

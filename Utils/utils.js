@@ -38,14 +38,11 @@ class Utils{
     }
 
     async tokenUsuario( data ){
-        // gera um usando o login token que irá expirar em uma hora
-        // var decoded = jwt.verify(webTokenEncript, 'imagineUmaChaveSecreta');
-   
-        return jwt.sign({ usuario: data, }, 'imagineUmaChaveSecreta', { expiresIn: '1h' });
+        return jwt.sign( data , 'imagineUmaChaveSecreta'/* , { expiresIn: '1h' } */);
     }
     
-    async checkToken( token ){
-        let decoded = jwt.verify(token, 'imagineUmaChaveSecreta');
+    async usuarioToken( token ){
+        let userToken = await jwt.verify(token, 'imagineUmaChaveSecreta');       
     }
     
     async imageBase64( path,type ){
