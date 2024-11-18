@@ -7,16 +7,23 @@ class User{
 
         try {
 
-            await Database('cartao').insert({
+            let result = await Database('cartao').insert({
                 descricao: descricao,
                 limite: limite,
                 usuario: usuario,
                 ativo: ativo                
             })
-
-            return {
-                status: 200,
-                mensage: 'Operação realizada.'
+            
+            if( result > 0 ){
+                return {
+                    status: 200,
+                    mensage: 'Operação realizada.'
+                }
+            }else{
+                return {
+                    status: 400,
+                    mensage: 'Operação não realizada.'
+                }
             }
 
         } catch (err) {
@@ -28,21 +35,29 @@ class User{
         }
     }
 
-    async atualizar({ codigo,descricao,limite, ativo }) {
+    async atualizar({ codigo,descricao,limite,usuario, ativo }) {
 
         try {
 
-            await Database('cartao').update({
+            let result = await Database('cartao').update({
                 descricao: descricao,
                 limite: limite,
                 ativo: ativo,
                 dataAlteracao: new Date()
-            }).where({ codigo: codigo })
+            }).where({ codigo: codigo, usuario: usuario })
 
-            return {
-                status: 200,
-                mensage: 'Operação realizada.'
+            if( result > 0 ){
+                return {
+                    status: 200,
+                    mensage: 'Operação realizada.'
+                }
+            }else{
+                return {
+                    status: 400,
+                    mensage: 'Operação não realizada.'
+                }
             }
+           
         } catch (err) {
             return {
                 status: 400,
@@ -82,9 +97,9 @@ class User{
 
     }
 
-    async buscarTodos() {
+    async buscarTodos(usuario) {
         try {
-            let result = await Database('cartao').select('codigo','descricao','ativo','limite','usuario');
+            let result = await Database('cartao').select('codigo','descricao','ativo','limite','usuario').where({ usuario: usuario});
             return {
                 status: 200,
                 mensage: 'Operação realizada.',

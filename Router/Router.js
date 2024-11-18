@@ -15,8 +15,8 @@ router.post('/usuario/acessar', UsuarioController.acessar);
 router.put('/usuario/:id', UsuarioController.findById);
 router.delete('/usuario/:id', UsuarioController.delete);
 
-router.post('/cartao', CartaoController.gravar);
-router.get('/cartao/', CartaoController.recuperar);
+router.post('/cartao',verificaToken,CartaoController.gravar);
+router.get('/cartao/',verificaToken, CartaoController.recuperar);
 router.get('/cartao/listagem',verificaToken, CartaoController.listagem);
 
 router.post('/compras', ComprasController.gravar);
