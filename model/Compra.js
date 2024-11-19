@@ -1,18 +1,52 @@
 const Database = require('../DataBase/index.js')
 const Utils = require('../Utils/utils.js')
 
-class User{
+class Compra{
 
-    async cadastro({ descricao,limite,usuario, ativo }) {
+    async cadastro({ descricao,cartao,valor,divisao,usuario }) {
+
+        try {
+            
+            for( let parcela= 1; parcela <= divisao; parcela++ ){
+                let fatura = (new Date(new Date().setMonth( new Date().getMonth() + (parcela -1) )).getMonth());
+
+                await Database('compras').insert({
+                    descricao: descricao,
+                    valor: valor,
+                    cartao: cartao,
+                    parcela: parcela,
+                    divisao: divisao,
+                    fatura: fatura,
+                    usuario: usuario,
+                    dataCadastro: new Date()
+                })
+            }
+            
+            return {
+                status: 200,
+                mensage: 'Operação realizada.'
+            }
+
+        } catch (err) {
+
+            return {
+                status: 400,
+                mensage: err.sqlMessage
+            }
+        }
+    }
+
+    async atualizar({ codigo,descricao,cartao,valor,parcela,usuario}) {
 
         try {
 
-            let result = await Database('cartao').insert({
+            let result = await Database('compras').update({
                 descricao: descricao,
-                limite: limite,
-                usuario: usuario,
-                ativo: ativo                
-            })
+                cartao: cartao,
+                valor: valor,
+                parcela: parcela,
+                dataAlteracao: new Date()
+            }).where({ codigo: codigo, usuario: usuario })
             
             if( result > 0 ){
                 return {
@@ -25,39 +59,7 @@ class User{
                     mensage: 'Operação não realizada.'
                 }
             }
-
-        } catch (err) {
-
-            return {
-                status: 400,
-                mensage: err.sqlMessage
-            }
-        }
-    }
-
-    async atualizar({ codigo,descricao,limite,usuario, ativo }) {
-
-        try {
-
-            let result = await Database('cartao').update({
-                descricao: descricao,
-                limite: limite,
-                ativo: ativo,
-                dataAlteracao: new Date()
-            }).where({ codigo: codigo, usuario: usuario })
-
-            if( result > 0 ){
-                return {
-                    status: 200,
-                    mensage: 'Operação realizada.'
-                }
-            }else{
-                return {
-                    status: 400,
-                    mensage: 'Operação não realizada.'
-                }
-            }
-           
+            
         } catch (err) {
             return {
                 status: 400,
@@ -99,7 +101,7 @@ class User{
 
     async buscarTodos(usuario) {
         try {
-            let result = await Database('cartao').select('codigo','descricao','ativo','limite','usuario').where({ usuario: usuario});
+            let result = await Database('compras').select('codigo','descricao','parcela','valor','usuario').where({ usuario: usuario});
             return {
                 status: 200,
                 mensage: 'Operação realizada.',
@@ -116,4 +118,4 @@ class User{
 
 }
 
-module.exports = new User()
+module.exports = new Compra()

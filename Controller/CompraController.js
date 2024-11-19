@@ -32,8 +32,7 @@ class CompraController {
     }
 
     async gravar( req, res ) {
-        console.log(1111111)
-        let { codigo, descricao,tipo,Compra,valor } = req.body;
+        let { codigo, descricao,tipo,cartao,valor,divisao } = req.body;
 
         if (descricao == undefined || descricao == "null") {
             res.json({
@@ -59,28 +58,44 @@ class CompraController {
             return;
         }   
         
-        if (Compra == undefined || Compra == "null") {
+        if (cartao == undefined || cartao == "null") {
             res.json({
                 status: 400,
                 mensage: 'Cartão não selecionado.'
             })
             return;
         }   
+        
+        if (divisao == undefined || divisao == "null") {
+            res.json({
+                status: 400,
+                mensage: 'divisao não selecionado.'
+            })
+            return;
+        }   
+
+        if( divisao > 1 ){
+            valor =  Utils.formatarMoeda(valor) / divisao;
+        }
 
         if (codigo == 0) {
-            var response = await Compra.gravar({
+            
+            var response = await Compra.cadastro({
                 descricao: Utils.formataString(descricao),
-                valor: Utils.formatarMoeda(valor),
-                tipo: Utils.formataNumero(tipo),
+                valor: valor,
+                divisao: Utils.formataNumero(divisao),
+                cartao: Utils.formataNumero(cartao),
                 usuario: res.locals.codigoUsuario
             });
+
         } else {
             var response = await Compra.atualizar({
                 codigo: Utils.formataNumero(codigo),
                 descricao: Utils.formataString(descricao),
-                limite: Utils.formatarMoeda(limite),
-                usuario: res.locals.codigoUsuario,
-                ativo: Utils.formataNumero(ativo)
+                valor: Utils.formatarMoeda(valor),
+                divisao: Utils.formataNumero(divisao),
+                cartao: Utils.formataNumero(cartao),
+                usuario: res.locals.codigoUsuario
             });
         }
 
