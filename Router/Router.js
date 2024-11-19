@@ -2,7 +2,7 @@ const express = require('express');
 var router = express.Router()
 const multer = require('multer');
 
-var ComprasController = require('../Controller/ComprasController')
+var CompraController = require('../Controller/CompraController')
 var UsuarioController = require('../Controller/UsuarioController')
 var CartaoController = require('../Controller/CartaoController')
 
@@ -19,6 +19,6 @@ router.post('/cartao',verificaToken,CartaoController.gravar);
 router.get('/cartao/',verificaToken, CartaoController.recuperar);
 router.get('/cartao/listagem',verificaToken, CartaoController.listagem);
 
-router.post('/compras', ComprasController.gravar);
+router.post('cartao/compra', CompraController.gravar);
 
-module.exports = router;    
+module.exports = router;
