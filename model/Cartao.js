@@ -99,13 +99,15 @@ class User{
 
     async buscarTodos(usuario) {
         try {
-            let result = await Database('cartao').select('codigo','descricao','ativo','limite','usuario').where({ usuario: usuario});
+            let result = await Database('cartao').select('codigo','descricao','ativo','limite','usuario').where({ usuario: usuario });
             return {
                 status: 200,
                 mensage: 'Operação realizada.',
                 data: result
             }
+            console.log(result)
         } catch (err) {
+            console.log(err)
             return {
                 status: 400,
                 mensage: err.sqlMessage

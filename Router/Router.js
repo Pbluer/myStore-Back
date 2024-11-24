@@ -20,5 +20,6 @@ router.get('/cartao/',verificaToken, CartaoController.recuperar);
 router.get('/cartao/listagem',verificaToken, CartaoController.listagem);
 
 router.post('/cartao/compra',verificaToken,CompraController.gravar);
+router.get('/cartao/compra/listagem',verificaToken,CompraController.listagem);
 
 module.exports = router;

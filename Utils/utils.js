@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 class Utils{
 
-    async getDateTimeSql() {
+    getDateTimeSql() {
 
         let date = new Date()
 
@@ -58,6 +58,12 @@ class Utils{
         })
         
         return;
+    }   
+
+    formataDataSql(data){
+        let split = data.split('/')
+
+        return `${split[2]}-${split[1]}-${split[0]}`
     }
 
     formataString(value) {

@@ -3,20 +3,21 @@ const Utils = require('../Utils/utils.js')
 
 class Compra{
 
-    async cadastro({ descricao,cartao,valor,divisao,usuario }) {
+    async cadastro({ descricao,valor,divisao,cartao,dataCompra,usuario }) {
 
         try {
             
             for( let parcela= 1; parcela <= divisao; parcela++ ){
                 let fatura = (new Date(new Date().setMonth( new Date().getMonth() + (parcela -1) )).getMonth());
-
-                await Database('compras').insert({
+                
+                let result = await Database('compras').insert({
                     descricao: descricao,
                     valor: valor,
                     cartao: cartao,
                     parcela: parcela,
                     divisao: divisao,
                     fatura: fatura,
+                    dataCompra:dataCompra,
                     usuario: usuario,
                     dataCadastro: new Date()
                 })
@@ -26,9 +27,8 @@ class Compra{
                 status: 200,
                 mensage: 'Operação realizada.'
             }
-
+            
         } catch (err) {
-
             return {
                 status: 400,
                 mensage: err.sqlMessage
@@ -101,7 +101,9 @@ class Compra{
 
     async buscarTodos(usuario) {
         try {
-            let result = await Database('compras').select('codigo','descricao','parcela','valor','usuario').where({ usuario: usuario});
+            let result = await Database('compras').select('codigo','descricao','parcela','valor','usuario')
+                .where({ usuario: usuario})
+                .leftJoin('cartao','cartao.codigo','compras.codigo').toString();
             return {
                 status: 200,
                 mensage: 'Operação realizada.',

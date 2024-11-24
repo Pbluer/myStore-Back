@@ -1,5 +1,4 @@
 var Cartao = require('../model/Cartao');
-var Compra = require('../model/Compra');
 const Utils = require('../Utils/utils');
 
 class CartaoController {
